@@ -10,11 +10,12 @@ class AppTheme {
   static ThemeData lightThemeMode() {
     return ThemeData(
       primaryColor: AppColors.primaryColor,
-      scaffoldBackgroundColor: AppColors.white,
+      scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.grey,
-        elevation: 0,
-        centerTitle: false,
+        titleTextStyle: AppTextStyles.cairo16w400,
+        toolbarTextStyle: AppTextStyles.cairo16w400,
+        toolbarHeight: 60.h,
         iconTheme: IconThemeData(color: AppColors.iconColor, size: 24.sp),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),

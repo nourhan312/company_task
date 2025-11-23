@@ -33,12 +33,14 @@ class AppTextStyles {
   );
 
   static TextStyle cairo16w400 = TextStyle(
+    fontFamily: 'Cairo',
     fontSize: 16.sp,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
   );
 
   static TextStyle cairo16w600 = TextStyle(
+    fontFamily: 'Cairo',
     fontSize: 16.sp,
     fontWeight: FontWeight.w600,
     color: AppColors.black,
