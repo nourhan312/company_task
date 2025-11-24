@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../core/extensions/context_extensions.dart';
 import 'company_grid_item.dart';
 
 class CompaniesGridView extends StatelessWidget {
