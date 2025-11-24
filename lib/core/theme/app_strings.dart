@@ -15,10 +15,10 @@ class AppStrings {
   static const individuals = "الأفراد";
   static const engineeringOffices = "المكاتب الهندسية";
   static const consultations = "استشارات هندسية";
-  static const contracting = "لائد سكاب";
+  static const contracting = "لاند سكيب";
   static const internalDesigns = "تصاميم داخلية";
-  static const externalDesigns = "تصاميم وتوجهات خارجية";
-  static const support = "مساحه ";
+  static const externalDesigns = "تصاميم واجهات خارجية";
+  static const support = "مساحة";
   static const participation = "إشراف";
 
   // City selection

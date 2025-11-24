@@ -24,6 +24,7 @@ dependencies:
   skeletonizer: ^2.1.0+1
   cupertino_icons: ^1.0.8
   flutter_localization:
+  smooth_sheets: ^0.15.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -3,6 +3,7 @@ import 'package:company_task/features/companies/presentation/widgets/search_text
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'filter_menu.dart';
 
 class SearchPart extends StatelessWidget {
   const SearchPart({super.key});
@@ -20,7 +21,17 @@ class SearchPart extends StatelessWidget {
           ),
           child: IconButton(
             icon: SvgPicture.asset('assets/icons/filter.svg'),
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  child: const FilterMenu(),
+                ),
+              );
+            },
           ),
         ),
       ],
