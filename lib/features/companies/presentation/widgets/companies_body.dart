@@ -3,8 +3,11 @@ import 'package:company_task/core/extensions/custom_sizedbox.dart';
 import 'package:company_task/features/companies/presentation/widgets/companies_list_view.dart';
 import 'package:company_task/features/companies/presentation/widgets/search_part.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../cubits/companies_cubit.dart';
+import '../cubits/companies_state.dart';
 import 'companies_grid_view.dart';
 
 class CompaniesBody extends StatelessWidget {
@@ -19,7 +22,17 @@ class CompaniesBody extends StatelessWidget {
           SearchPart(),
           24.h.boxH,
 
-          Expanded(child: CompaniesListView()),
+          BlocBuilder<CompaniesCubit, CompaniesState>(
+            builder: (context, state) {
+              final cubit = context.read<CompaniesCubit>();
+
+              return Expanded(
+                child: cubit.isListView
+                    ? CompaniesListView()
+                    : CompaniesGridView(),
+              );
+            },
+          ),
         ],
       ),
     );
