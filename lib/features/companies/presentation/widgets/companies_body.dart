@@ -25,11 +25,23 @@ class CompaniesBody extends StatelessWidget {
           BlocBuilder<CompaniesCubit, CompaniesState>(
             builder: (context, state) {
               final cubit = context.read<CompaniesCubit>();
+              final isListView = state is SwitchViewState
+                  ? state.isList
+                  : cubit.isListView;
 
               return Expanded(
-                child: cubit.isListView
-                    ? CompaniesListView()
-                    : CompaniesGridView(),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: ScaleTransition(scale: animation, child: child),
+                    );
+                  },
+                  child: isListView
+                      ? CompaniesListView(key: const ValueKey('list'))
+                      : CompaniesGridView(key: const ValueKey('grid')),
+                ),
               );
             },
           ),
