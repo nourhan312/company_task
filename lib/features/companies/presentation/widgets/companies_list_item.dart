@@ -77,15 +77,16 @@ class CompaniesListItem extends StatelessWidget {
                             Icon(Icons.star, size: 20.sp, color: Colors.amber),
                       ),
                     ),
+                    4.w.boxW,
+                    Icon(Icons.location_on, color: Colors.grey, size: 18.sp),
                     8.w.boxW,
+
                     Text(
                       'الرياض',
                       style: AppTextStyles.cairo16w400.copyWith(
                         fontSize: 12.sp,
                       ),
                     ),
-                    4.w.boxW,
-                    Icon(Icons.location_on, color: Colors.grey, size: 18.sp),
                   ],
                 ),
               ],
