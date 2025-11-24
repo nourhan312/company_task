@@ -9,11 +9,12 @@ class AppTheme {
 
   static ThemeData lightThemeMode() {
     return ThemeData(
+      useMaterial3: true,
       primaryColor: AppColors.primaryColor,
       scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.grey,
-        titleTextStyle: AppTextStyles.cairo16w400,
+        titleTextStyle: AppTextStyles.cairo16w400.copyWith(fontSize: 18.sp),
         toolbarTextStyle: AppTextStyles.cairo16w400,
         toolbarHeight: 60.h,
         iconTheme: IconThemeData(color: AppColors.iconColor, size: 24.sp),
@@ -29,6 +30,27 @@ class AppTheme {
         headlineMedium: AppTextStyles.cairo16w600,
         titleLarge: AppTextStyles.cairo16w500,
         bodyLarge: AppTextStyles.cairo16w400,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: AppTextStyles.cairo16w400.copyWith(
+          color: AppColors.black,
+          fontSize: 14.sp,
+        ),
+
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25.r),
+          borderSide: BorderSide(color: AppColors.grey, width: 1.w),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25.r),
+          borderSide: BorderSide(color: AppColors.grey, width: 1.w),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25.r),
+          borderSide: BorderSide(color: AppColors.grey, width: 1.w),
+        ),
+        filled: true,
+        fillColor: AppColors.searchBk,
       ),
     );
   }

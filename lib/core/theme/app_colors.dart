@@ -11,8 +11,12 @@ class AppColors {
   static const Color white = Color(0xffEFEFEF);
 
   static const Color iconColor = Color(0xff5E5E5E);
+  static const Color hint = Color(0xff3B3B3B);
+  static const Color anotherGray = Color(0xff6D6D6D);
 
   static const Color yellow = Color(0xffFFD628);
   static const Color grey = Color(0xffE0E0E0);
+  static const Color searchBk = Color(0xffFBFBFB);
+
   static const Color black = Color(0xff000000);
 }

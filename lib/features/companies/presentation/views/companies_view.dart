@@ -1,7 +1,9 @@
+import 'package:company_task/features/companies/presentation/widgets/no_search_body.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_strings.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../widgets/companies_body.dart';
 
 class CompaniesView extends StatelessWidget {
   const CompaniesView({super.key});
@@ -10,6 +12,7 @@ class CompaniesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.appbarTitle, onMenuPressed: () {}),
+      body: CompaniesBody(),
     );
   }
 }
