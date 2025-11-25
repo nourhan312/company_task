@@ -19,4 +19,8 @@ class ApiKeys {
   static const String type = "type";
   static const String search = "search";
   static const String id = "id";
+
+  // Headers
+  static const String accept = "Accept";
+  static const String acceptLanguage = "Accept-Language";
 }

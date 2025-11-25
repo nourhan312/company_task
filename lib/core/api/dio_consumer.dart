@@ -1,3 +1,4 @@
+import 'package:company_task/core/api/api_interceptor.dart';
 import 'package:dio/dio.dart';
 import '../errors/exceptions.dart';
 import 'api_consumer.dart';
@@ -8,6 +9,9 @@ class DioConsumer extends ApiConsumer {
 
   DioConsumer({required this.dio}) {
     dio.options.baseUrl = EndPoints.baseUrl;
+    // api interceptor to add headers 
+    dio.interceptors.add(ApiInterceptor());
+    // show logs about requests and responses
     dio.interceptors.add(
       LogInterceptor(
         request: true,
