@@ -1,22 +1,29 @@
-import 'package:bloc/bloc.dart';
-import '../../data/models/cities_model.dart';
-import '../../data/models/companies_model.dart';
-import '../../data/models/sub_categoreis.dart';
-import '../../domain/repositories/companies_repository.dart';
-import 'companies_state.dart';
+import 'package:company_task/features/companies/domain/Entities/cities_entities.dart';
+import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
+import 'package:company_task/features/companies/domain/Entities/sub_categoreis_entities.dart';
+import 'package:company_task/features/companies/domain/usecases/cities_usecases%20.dart';
+import 'package:company_task/features/companies/domain/usecases/companies_usecases.dart';
+import 'package:company_task/features/companies/domain/usecases/sub_categories_usecases.dart';
+import 'package:company_task/features/companies/presentation/cubits/companies_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CompaniesCubit extends Cubit<CompaniesState> {
-  final CompaniesRepository companiesRepository;
+  final GetCitiesUseCase getCitiesUseCase;
+  final GetSubCategoriesUseCase getSubCategoriesUseCase;
+  final FilterCompaniesUseCase filterCompaniesUseCase;
 
-  CompaniesCubit({required this.companiesRepository})
-    : super(CompaniesInitial());
+  CompaniesCubit({
+    required this.getCitiesUseCase,
+    required this.getSubCategoriesUseCase,
+    required this.filterCompaniesUseCase,
+  }) : super(CompaniesInitial());
 
   bool isListView = false;
   bool isFavourites = false;
 
-  List<CityModel> cities = [];
-  List<SubCategoryModel> subCategories = [];
-  List<CompaniesModel> companies = [];
+  List<CityEntity> cities = [];
+  List<SubCategoryEntity> subCategories = [];
+  List<CompanyEntity> companies = [];
 
   void switchToGrid() {
     isListView = !isListView;
@@ -25,12 +32,12 @@ class CompaniesCubit extends Cubit<CompaniesState> {
 
   void addToFavourites() {
     isFavourites = !isFavourites;
-    emit(SwitchViewState(isFavourites));
+    emit(AddToFavouritesState(isFavourites));
   }
 
   Future<void> getCities() async {
     emit(GetCitiesLoading());
-    final result = await companiesRepository.getCities();
+    final result = await getCitiesUseCase();
     result.fold((l) => emit(GetCitiesError(l.message)), (r) {
       cities = r;
       emit(GetCitiesSuccess());
@@ -39,7 +46,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
 
   Future<void> getSubCategories() async {
     emit(GetSubCategoriesLoading());
-    final result = await companiesRepository.getSubCategories();
+    final result = await getSubCategoriesUseCase();
     result.fold((l) => emit(GetSubCategoriesError(l.message)), (r) {
       subCategories = r;
       emit(GetSubCategoriesSuccess());
@@ -53,7 +60,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
     String? search,
   }) async {
     emit(FilterCompaniesLoading());
-    final result = await companiesRepository.filterCompanies(
+    final result = await filterCompaniesUseCase(
       subCategories: subCategories,
       cityId: cityId,
       type: type,
