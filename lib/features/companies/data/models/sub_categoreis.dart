@@ -1,18 +1,19 @@
-class SubCategoreisModel {
+class SubCategoryModel {
+  final int id;
+  final String name;
+  final String image;
 
-int ? id;
-String ? name;
-String ? image;
+  SubCategoryModel({
+    required this.id,
+    required this.name,
+    required this.image,
+  });
 
-SubCategoreisModel({this.id, this.name, this.image});
-
-
-SubCategoreisModel.fromJson(Map<String, dynamic> json) {
-  id = json['id'];
-  name = json['name'];
-  image = json['image'];
-}
-
-
-
+  factory SubCategoryModel.fromJson(Map<String, dynamic> json) {
+    return SubCategoryModel(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? "",
+      image: json['img'] ?? "",
+    );
+  }
 }

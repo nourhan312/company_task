@@ -18,7 +18,7 @@ class CompaniesRepoImpl implements CompaniesRepository {
   Future<Either<Failure, List<CityModel>>> getCities() async {
     try {
       final response = await apiConsumer.get(EndPoints.cities);
-      final List<dynamic> data = response;
+      final List<dynamic> data = response['data'];
       final cities = data.map((e) => CityModel.fromJson(e)).toList();
       return Right(cities);
     } on ServerException catch (e) {
@@ -27,12 +27,12 @@ class CompaniesRepoImpl implements CompaniesRepository {
   }
 
   @override
-  Future<Either<Failure, List<SubCategoreisModel>>> getSubCategories() async {
+  Future<Either<Failure, List<SubCategoryModel>>> getSubCategories() async {
     try {
       final response = await apiConsumer.get(EndPoints.subCategories);
-      final List<dynamic> data = response;
+      final List<dynamic> data = response['data'];
       final subCategories = data
-          .map((e) => SubCategoreisModel.fromJson(e))
+          .map((e) => SubCategoryModel.fromJson(e))
           .toList();
       return Right(subCategories);
     } on ServerException catch (e) {
@@ -62,7 +62,7 @@ class CompaniesRepoImpl implements CompaniesRepository {
         },
       );
 
-      final List<dynamic> data = response;
+      final List<dynamic> data = response['data'];
       final companies = data.map((e) => CompaniesModel.fromJson(e)).toList();
       return Right(companies);
     } on ServerException catch (e) {

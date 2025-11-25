@@ -6,7 +6,7 @@ import '../../data/models/sub_categoreis.dart';
 
 abstract class CompaniesRepository {
   Future<Either<Failure, List<CityModel>>> getCities();
-  Future<Either<Failure, List<SubCategoreisModel>>> getSubCategories();
+  Future<Either<Failure, List<SubCategoryModel>>> getSubCategories();
   Future<Either<Failure, List<CompaniesModel>>> filterCompanies({
     required List<int> subCategories,
     required int cityId,

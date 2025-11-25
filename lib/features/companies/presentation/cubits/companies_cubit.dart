@@ -15,7 +15,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
   bool isFavourites = false;
 
   List<CityModel> cities = [];
-  List<SubCategoreisModel> subCategories = [];
+  List<SubCategoryModel> subCategories = [];
   List<CompaniesModel> companies = [];
 
   void switchToGrid() {
