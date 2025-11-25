@@ -1,12 +1,10 @@
-class SubCategoryModel {
-  final int id;
-  final String name;
-  final String image;
+import 'package:company_task/features/companies/domain/Entities/sub_categoreis_entities.dart';
 
+class SubCategoryModel extends SubCategoryEntity {
   SubCategoryModel({
-    required this.id,
-    required this.name,
-    required this.image,
+    required super.id,
+    required super.name,
+    required super.image,
   });
 
   factory SubCategoryModel.fromJson(Map<String, dynamic> json) {

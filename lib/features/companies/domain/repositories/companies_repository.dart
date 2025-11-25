@@ -1,13 +1,14 @@
+
+import 'package:company_task/core/errors/failure.dart';
+import 'package:company_task/features/companies/domain/Entities/cities_entities.dart';
+import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
+import 'package:company_task/features/companies/domain/Entities/sub_categoreis_entities.dart';
 import 'package:dartz/dartz.dart';
-import '../../../../core/errors/failure.dart';
-import '../../data/models/cities_model.dart';
-import '../../data/models/companies_model.dart';
-import '../../data/models/sub_categoreis.dart';
 
 abstract class CompaniesRepository {
-  Future<Either<Failure, List<CityModel>>> getCities();
-  Future<Either<Failure, List<SubCategoryModel>>> getSubCategories();
-  Future<Either<Failure, List<CompaniesModel>>> filterCompanies({
+  Future<Either<Failure, List<CityEntity>>> getCities();
+  Future<Either<Failure, List<SubCategoryEntity>>> getSubCategories();
+  Future<Either<Failure, List<CompanyEntity>>> filterCompanies({
     required List<int> subCategories,
     required int cityId,
     required String type,

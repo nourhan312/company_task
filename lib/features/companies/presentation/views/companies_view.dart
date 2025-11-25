@@ -8,6 +8,7 @@ import '../cubits/companies_cubit.dart';
 import '../widgets/companies_body.dart';
 
 class CompaniesView extends StatelessWidget {
+  
   const CompaniesView({super.key});
 
   @override

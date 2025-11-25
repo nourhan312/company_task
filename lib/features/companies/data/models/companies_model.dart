@@ -1,26 +1,19 @@
-class CompaniesModel {
-  final int id;
-  final String name;
-  final String image;
-  final String type;
-  final String description;
-  final bool isFavourite;
-  final double rating;
-  final String location;
+import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
 
-  CompaniesModel({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.type,
-    required this.description,
-    required this.isFavourite,
-    required this.rating,
-    required this.location,
+class CompanyModel extends CompanyEntity {
+  CompanyModel({
+    required super.id,
+    required super.name,
+    required super.image,
+    required super.type,
+    required super.description,
+    required super.isFavourite,
+    required super.rating,
+    required super.location,
   });
 
-  factory CompaniesModel.fromJson(Map<String, dynamic> json) {
-    return CompaniesModel(
+  factory CompanyModel.fromJson(Map<String, dynamic> json) {
+    return CompanyModel(
       id: json['id'] ?? 0,
       name: json['name'] ?? "",
       image: json['img'] ?? "",

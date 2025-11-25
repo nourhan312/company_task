@@ -1,13 +1,20 @@
+
 import 'dart:convert';
+
+import 'package:company_task/core/api/api_consumer.dart';
+import 'package:company_task/core/api/end_points.dart';
+import 'package:company_task/core/errors/exceptions.dart';
+import 'package:company_task/core/errors/failure.dart';
+import 'package:company_task/features/companies/data/models/cities_model.dart';
+import 'package:company_task/features/companies/data/models/companies_model.dart';
+import 'package:company_task/features/companies/data/models/sub_categoreis.dart';
+import 'package:company_task/features/companies/domain/Entities/cities_entities.dart';
+import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
+import 'package:company_task/features/companies/domain/repositories/companies_repository.dart';
 import 'package:dartz/dartz.dart';
-import '../../../../core/api/api_consumer.dart';
-import '../../../../core/api/end_points.dart';
-import '../../../../core/errors/exceptions.dart';
-import '../../../../core/errors/failure.dart';
-import '../../domain/repositories/companies_repository.dart';
-import '../models/cities_model.dart';
-import '../models/companies_model.dart';
-import '../models/sub_categoreis.dart';
+import 'package:flutter/material.dart';
+
+import '../../domain/Entities/sub_categoreis_entities.dart';
 
 class CompaniesRepoImpl implements CompaniesRepository {
   final ApiConsumer apiConsumer;
@@ -15,11 +22,12 @@ class CompaniesRepoImpl implements CompaniesRepository {
   CompaniesRepoImpl({required this.apiConsumer});
 
   @override
-  Future<Either<Failure, List<CityModel>>> getCities() async {
+  Future<Either<Failure, List<CityEntity>>> getCities() async {
     try {
       final response = await apiConsumer.get(EndPoints.cities);
       final List<dynamic> data = response['data'];
       final cities = data.map((e) => CityModel.fromJson(e)).toList();
+      debugPrint(cities.toString());
       return Right(cities);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.errorModel.errorMessage));
@@ -27,7 +35,7 @@ class CompaniesRepoImpl implements CompaniesRepository {
   }
 
   @override
-  Future<Either<Failure, List<SubCategoryModel>>> getSubCategories() async {
+  Future<Either<Failure, List<SubCategoryEntity>>> getSubCategories() async {
     try {
       final response = await apiConsumer.get(EndPoints.subCategories);
       final List<dynamic> data = response['data'];
@@ -41,7 +49,7 @@ class CompaniesRepoImpl implements CompaniesRepository {
   }
 
   @override
-  Future<Either<Failure, List<CompaniesModel>>> filterCompanies({
+  Future<Either<Failure, List<CompanyEntity>>> filterCompanies({
     required List<int> subCategories,
     required int cityId,
     required String type,
@@ -63,7 +71,7 @@ class CompaniesRepoImpl implements CompaniesRepository {
       );
 
       final List<dynamic> data = response['data'];
-      final companies = data.map((e) => CompaniesModel.fromJson(e)).toList();
+      final companies = data.map((e) => CompanyModel.fromJson(e)).toList();
       return Right(companies);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.errorModel.errorMessage));
