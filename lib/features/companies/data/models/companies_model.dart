@@ -24,6 +24,4 @@ CompaniesModel.fromJson(Map<String, dynamic> json) {
   location = json['location'];
 }
 
-
-
 }
