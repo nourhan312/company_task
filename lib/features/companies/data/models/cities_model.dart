@@ -1,13 +1,10 @@
-class CitiesModel {
+class CityModel {
   final int id;
   final String name;
 
-  CitiesModel({required this.id, required this.name});
+  CityModel({required this.id, required this.name});
 
-  factory CitiesModel.fromJson(Map<String, dynamic> json) {
-    return CitiesModel(
-      id: json['id'],
-      name: json['name'],
-    );
+  factory CityModel.fromJson(Map<String, dynamic> json) {
+    return CityModel(id: json['id'], name: json['name']);
   }
 }
