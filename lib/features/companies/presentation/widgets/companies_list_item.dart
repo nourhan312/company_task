@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:company_task/core/extensions/custom_sizedbox.dart';
 import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
+import 'package:company_task/features/companies/presentation/cubits/companies_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -116,14 +118,19 @@ class CompaniesListItem extends StatelessWidget {
             child: IconButton(
               padding: EdgeInsets.zero,
               icon: company.isFavourite
-                  ? Icon(Icons.favorite, color: Colors.red, size: 20.sp)
+                  ? SvgPicture.asset(
+                      'assets/icons/heart.svg',
+                      height: 20.h,
+                      width: 20.w,
+                      color: Colors.red,
+                    )
                   : SvgPicture.asset(
                       'assets/icons/heart.svg',
                       height: 20.h,
                       width: 20.w,
                     ),
               onPressed: () {
-                // Handle favourite toggle
+                context.read<CompaniesCubit>().toggleFavourite(company.id);
               },
             ),
           ),

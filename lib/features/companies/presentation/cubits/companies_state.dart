@@ -7,9 +7,9 @@ class SwitchViewState extends CompaniesState {
   SwitchViewState(this.isList);
 }
 
-class AddToFavouritesState extends CompaniesState {
-  final bool isFav;
-  AddToFavouritesState(this.isFav);
+class ToggleFavouriteState extends CompaniesState {
+  final int companyId;
+  ToggleFavouriteState(this.companyId);
 }
 
 class GetCitiesLoading extends CompaniesState {}

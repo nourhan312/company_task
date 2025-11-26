@@ -30,9 +30,24 @@ class CompaniesCubit extends Cubit<CompaniesState> {
     emit(SwitchViewState(isListView));
   }
 
-  void addToFavourites() {
-    isFavourites = !isFavourites;
-    emit(AddToFavouritesState(isFavourites));
+  void toggleFavourite(int companyId) {
+    companies = companies.map((company) {
+      if (company.id == companyId) {
+        return CompanyEntity(
+          id: company.id,
+          name: company.name,
+          image: company.image,
+          type: company.type,
+          description: company.description,
+          isFavourite: !company.isFavourite,
+          rating: company.rating,
+          location: company.location,
+        );
+      }
+      return company;
+    }).toList();
+
+    emit(ToggleFavouriteState(companyId));
   }
 
   Future<void> getCities() async {
