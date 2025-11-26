@@ -8,14 +8,16 @@ class FilterChipSkeletonItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: context.symmetric(horizontal: 22.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.grey.shade300),
+    return Skeletonizer(
+      child: Container(
+        padding: context.symmetric(horizontal: 22.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Bone.text(words: 1, fontSize: 14.sp),
       ),
-      child: Bone.text(words: 1, fontSize: 14.sp),
     );
   }
 }
