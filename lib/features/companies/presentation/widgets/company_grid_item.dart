@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +8,9 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_textstyles.dart';
 
 class CompanyGridItem extends StatelessWidget {
-  const CompanyGridItem({super.key});
+  final CompanyEntity company;
+
+  const CompanyGridItem({super.key, required this.company});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +21,12 @@ class CompanyGridItem extends StatelessWidget {
 
       borderOnForeground: false,
       child: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12.r),
             child: CachedNetworkImage(
-              imageUrl: '',
+              imageUrl: company.image,
               height: 105.h,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -44,7 +47,7 @@ class CompanyGridItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'شركة التميز للديكور',
+                  company.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.cairo16w500.copyWith(fontSize: 13.sp),
@@ -61,12 +64,20 @@ class CompanyGridItem extends StatelessWidget {
                   ),
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    icon: SvgPicture.asset(
-                      'assets/icons/heart.svg',
-                      height: 18.h,
-                      width: 18.w,
-                      fit: BoxFit.contain,
-                    ),
+                    icon: company.isFavourite
+                        ? SvgPicture.asset(
+                            'assets/icons/heart.svg',
+                            height: 18.h,
+                            width: 18.w,
+                            fit: BoxFit.contain,
+                            color: Colors.red,
+                          )
+                        : SvgPicture.asset(
+                            'assets/icons/heart.svg',
+                            height: 18.h,
+                            width: 18.w,
+                            fit: BoxFit.contain,
+                          ),
                     onPressed: () {},
                   ),
                 ),
@@ -75,7 +86,7 @@ class CompanyGridItem extends StatelessWidget {
           ),
 
           Text(
-            'خلافاَ للإعتقاد السائد فإن لوريم إيبسوم ليس نصاَ عشوائياً، بل إن له جذور في الأدب اللاتيني',
+            company.description,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.cairo16w400.copyWith(fontSize: 10.sp),

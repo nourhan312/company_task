@@ -1,15 +1,18 @@
+import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
 import 'package:flutter/material.dart';
 
 import 'companies_list_item.dart';
 
 class CompaniesListView extends StatelessWidget {
-  const CompaniesListView({super.key});
+  final List<CompanyEntity> companies;
+
+  const CompaniesListView({super.key, required this.companies});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 6,
-      itemBuilder: (_, index) => const CompaniesListItem(),
+      itemCount: companies.length,
+      itemBuilder: (_, index) => CompaniesListItem(company: companies[index]),
     );
   }
 }

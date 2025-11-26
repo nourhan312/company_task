@@ -8,6 +8,7 @@ class DioConsumer extends ApiConsumer {
   final Dio dio;
 
   DioConsumer({required this.dio}) {
+    
     dio.options.baseUrl = EndPoints.baseUrl;
     // api interceptor to add headers 
     dio.interceptors.add(ApiInterceptor());

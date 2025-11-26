@@ -24,7 +24,14 @@ class CompaniesBody extends StatelessWidget {
 
           BlocBuilder<CompaniesCubit, CompaniesState>(
             builder: (context, state) {
+              if (state is FilterCompaniesLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is FilterCompaniesError) {
+                return Center(child: Text(state.message));
+              }
+
               final cubit = context.read<CompaniesCubit>();
+
               final isListView = state is SwitchViewState
                   ? state.isList
                   : cubit.isListView;
@@ -39,8 +46,14 @@ class CompaniesBody extends StatelessWidget {
                     );
                   },
                   child: isListView
-                      ? CompaniesListView(key: const ValueKey('list'))
-                      : CompaniesGridView(key: const ValueKey('grid')),
+                      ? CompaniesListView(
+                          key: const ValueKey('list'),
+                          companies: cubit.companies,
+                        )
+                      : CompaniesGridView(
+                          key: const ValueKey('grid'),
+                          companies: cubit.companies,
+                        ),
                 ),
               );
             },

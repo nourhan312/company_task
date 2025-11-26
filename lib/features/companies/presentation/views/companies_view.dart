@@ -8,7 +8,6 @@ import '../cubits/companies_cubit.dart';
 import '../widgets/companies_body.dart';
 
 class CompaniesView extends StatelessWidget {
-  
   const CompaniesView({super.key});
 
   @override
@@ -17,6 +16,12 @@ class CompaniesView extends StatelessWidget {
       create: (_) => sl<CompaniesCubit>(),
       child: Builder(
         builder: (context) {
+          final cubit = context.read<CompaniesCubit>();
+          cubit.filterCompanies(
+            subCategories: [1, 2, 3],
+            cityId: 2,
+            type: 'person',
+          );
           return Scaffold(
             appBar: CustomAppBar(
               title: AppStrings.appbarTitle,

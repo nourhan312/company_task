@@ -1,4 +1,3 @@
-
 import 'package:company_task/core/errors/failure.dart';
 import 'package:company_task/features/companies/domain/Entities/cities_entities.dart';
 import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';

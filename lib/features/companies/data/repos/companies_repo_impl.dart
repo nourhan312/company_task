@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:company_task/core/api/api_consumer.dart';
@@ -70,7 +69,7 @@ class CompaniesRepoImpl implements CompaniesRepository {
         },
       );
 
-      final List<dynamic> data = response['data'];
+      final List<dynamic> data = response['data']['data'];
       final companies = data.map((e) => CompanyModel.fromJson(e)).toList();
       return Right(companies);
     } on ServerException catch (e) {

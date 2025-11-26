@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:company_task/core/extensions/custom_sizedbox.dart';
+import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,12 +10,15 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_textstyles.dart';
 
 class CompaniesListItem extends StatelessWidget {
-  const CompaniesListItem({super.key});
+  final CompanyEntity company;
+
+  const CompaniesListItem({super.key, required this.company});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: context.all(12.w),
+      margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
@@ -25,7 +29,7 @@ class CompaniesListItem extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12.r),
             child: CachedNetworkImage(
-              imageUrl: '',
+              imageUrl: company.image,
               height: 90.h,
               width: 90.w,
               fit: BoxFit.cover,
@@ -46,45 +50,53 @@ class CompaniesListItem extends StatelessWidget {
           10.w.boxW,
           Expanded(
             child: Column(
-              crossAxisAlignment: .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'مهندسة غادة محمد',
+                  company.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                   style: AppTextStyles.cairo16w600.copyWith(fontSize: 15.sp),
                 ),
                 4.h.boxH,
 
                 Text(
-                  'خلافاً للإعتقاد السائد فإن لوريم إيبسوم ليس نصاً عشوائياً، بل إن له جذور في الأدب اللاتيني',
+                  company.description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                   style: AppTextStyles.cairo16w400.copyWith(fontSize: 12.sp),
                 ),
 
                 6.h.boxH,
 
                 Row(
-                  mainAxisAlignment: .center,
                   children: [
                     Row(
                       children: List.generate(
                         5,
-                        (index) =>
-                            Icon(Icons.star, size: 20.sp, color: Colors.amber),
+                        (index) => Icon(
+                          Icons.star,
+                          size: 20.sp,
+                          color: index < company.rating
+                              ? Colors.amber
+                              : Colors.grey.shade300,
+                        ),
                       ),
                     ),
                     4.w.boxW,
                     Icon(Icons.location_on, color: Colors.grey, size: 18.sp),
                     8.w.boxW,
 
-                    Text(
-                      'الرياض',
-                      style: AppTextStyles.cairo16w400.copyWith(
-                        fontSize: 12.sp,
+                    Expanded(
+                      child: Text(
+                        company.location,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.cairo16w400.copyWith(
+                          fontSize: 12.sp,
+                        ),
                       ),
                     ),
                   ],
@@ -103,12 +115,16 @@ class CompaniesListItem extends StatelessWidget {
             ),
             child: IconButton(
               padding: EdgeInsets.zero,
-              icon: SvgPicture.asset(
-                'assets/icons/heart.svg',
-                height: 20.h,
-                width: 20.w,
-              ),
-              onPressed: () {},
+              icon: company.isFavourite
+                  ? Icon(Icons.favorite, color: Colors.red, size: 20.sp)
+                  : SvgPicture.asset(
+                      'assets/icons/heart.svg',
+                      height: 20.h,
+                      width: 20.w,
+                    ),
+              onPressed: () {
+                // Handle favourite toggle
+              },
             ),
           ),
         ],
