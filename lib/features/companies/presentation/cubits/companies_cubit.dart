@@ -18,7 +18,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
     required this.filterCompaniesUseCase,
   }) : super(CompaniesInitial());
 
-  bool isListView = false;
+  bool isListView = true;
   bool isFavourites = false;
 
   List<CityEntity> cities = [];
