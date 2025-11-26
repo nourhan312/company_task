@@ -13,7 +13,9 @@ class CompaniesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<CompaniesCubit>(),
+      create: (_) => sl<CompaniesCubit>()
+        ..getCities()
+        ..getSubCategories(),
       child: Builder(
         builder: (context) {
           final cubit = context.read<CompaniesCubit>();

@@ -2,11 +2,13 @@ import 'package:company_task/core/extensions/context_extensions.dart';
 import 'package:company_task/core/extensions/custom_sizedbox.dart';
 import 'package:company_task/core/theme/app_strings.dart';
 import 'package:company_task/core/theme/app_textstyles.dart';
+import 'package:company_task/features/companies/presentation/cubits/companies_cubit.dart';
 import 'package:company_task/features/companies/presentation/widgets/custom_dropdown_menu.dart';
 import 'package:company_task/features/companies/presentation/widgets/custom_elevated_button.dart';
 import 'package:company_task/features/companies/presentation/widgets/custom_filter_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:company_task/core/theme/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FilterMenu extends StatefulWidget {
@@ -18,25 +20,18 @@ class FilterMenu extends StatefulWidget {
 
 class _FilterMenuState extends State<FilterMenu> {
   String selectedServiceProvider = AppStrings.engineeringOffices;
-  String selectedService = AppStrings.consultations;
-  String? selectedCity;
+  List<int> selectedSubCategories = [];
+  int? selectedCityId;
 
   final List<String> serviceProviders = [
     AppStrings.engineeringOffices,
     AppStrings.individuals,
   ];
 
-  final List<String> services = [
-    AppStrings.consultations,
-    AppStrings.contracting,
-    AppStrings.internalDesigns,
-    AppStrings.externalDesigns,
-    AppStrings.support,
-    AppStrings.participation,
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<CompaniesCubit>();
+
     return Container(
       padding: context.all(16),
       decoration: BoxDecoration(
@@ -72,8 +67,8 @@ class _FilterMenuState extends State<FilterMenu> {
                 onPressed: () {
                   setState(() {
                     selectedServiceProvider = "";
-                    selectedService = "";
-                    selectedCity = null;
+                    selectedSubCategories = [];
+                    selectedCityId = null;
                   });
                 },
                 child: Text(
@@ -116,13 +111,17 @@ class _FilterMenuState extends State<FilterMenu> {
           Wrap(
             spacing: 8.w,
             runSpacing: 8.h,
-            children: services.map((service) {
+            children: cubit.subCategories.map((subCategory) {
               return CustomFilterChip(
-                label: service,
-                selected: selectedService == service,
+                label: subCategory.name,
+                selected: selectedSubCategories.contains(subCategory.id),
                 onSelected: (selected) {
                   setState(() {
-                    selectedService = selected ? service : "";
+                    if (selected) {
+                      selectedSubCategories.add(subCategory.id);
+                    } else {
+                      selectedSubCategories.remove(subCategory.id);
+                    }
                   });
                 },
               );
@@ -134,22 +133,38 @@ class _FilterMenuState extends State<FilterMenu> {
             style: AppTextStyles.cairo16w500.copyWith(color: AppColors.black),
           ),
           16.h.boxH,
-          CustomDropdownMenu<String>(
-            value: selectedCity,
-            items: const ["Cairo", "Giza", "Alexandria"],
+          CustomDropdownMenu<int>(
+            value: selectedCityId,
+            items: cubit.cities.map((city) => city.id).toList(),
             hint: AppStrings.citySelection,
             onChanged: (newValue) {
               setState(() {
-                selectedCity = newValue;
+                selectedCityId = newValue;
               });
             },
-            itemLabelBuilder: (item) => item,
+            itemLabelBuilder: (cityId) {
+              final city = cubit.cities.firstWhere((c) => c.id == cityId);
+              return city.name;
+            },
           ),
           32.h.boxH,
           Padding(
             padding: context.symmetric(horizontal: 16.w),
             child: CustomElevatedButton(
               onPressed: () {
+                String type = '';
+                if (selectedServiceProvider == AppStrings.engineeringOffices) {
+                  type = 'office';
+                } else if (selectedServiceProvider == AppStrings.individuals) {
+                  type = 'person';
+                }
+
+                cubit.filterCompanies(
+                  subCategories: selectedSubCategories,
+                  cityId: selectedCityId ?? 0,
+                  type: type,
+                );
+
                 Navigator.pop(context);
               },
               text: AppStrings.apply,
