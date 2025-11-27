@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:company_task/core/extensions/custom_sizedbox.dart';
-import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
+import 'package:company_task/features/companies/data/models/companies_model.dart';
 import 'package:company_task/features/companies/presentation/cubits/companies_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +12,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_textstyles.dart';
 
 class CompaniesListItem extends StatelessWidget {
-  final CompanyEntity company;
+  final CompanyModel company;
 
   const CompaniesListItem({super.key, required this.company});
 

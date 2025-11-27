@@ -1,34 +1,33 @@
-import 'package:company_task/features/companies/domain/Entities/cities_entities.dart';
-import 'package:company_task/features/companies/domain/Entities/companies_entities.dart';
-import 'package:company_task/features/companies/domain/Entities/sub_categoreis_entities.dart';
-import 'package:company_task/features/companies/domain/usecases/cities_usecases%20.dart';
-import 'package:company_task/features/companies/domain/usecases/companies_usecases.dart';
-import 'package:company_task/features/companies/domain/usecases/sub_categories_usecases.dart';
+import 'package:company_task/features/companies/data/models/cities_model.dart';
+import 'package:company_task/features/companies/data/models/companies_model.dart';
+import 'package:company_task/features/companies/data/models/companies_response_model.dart';
+import 'package:company_task/features/companies/data/models/sub_categoreis.dart';
+import 'package:company_task/features/companies/data/repos/companies_repository.dart';
 import 'package:company_task/features/companies/presentation/cubits/companies_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CompaniesCubit extends Cubit<CompaniesState> {
-  final GetCitiesUseCase getCitiesUseCase;
-  final GetSubCategoriesUseCase getSubCategoriesUseCase;
-  final FilterCompaniesUseCase filterCompaniesUseCase;
+  final CompaniesRepository companiesRepository;
 
-  CompaniesCubit({
-    required this.getCitiesUseCase,
-    required this.getSubCategoriesUseCase,
-    required this.filterCompaniesUseCase,
-  }) : super(CompaniesInitial());
+  CompaniesCubit({required this.companiesRepository})
+    : super(CompaniesInitial());
 
   bool isListView = true;
   bool isFavourites = false;
 
-  List<CityEntity> cities = [];
-  List<SubCategoryEntity> subCategories = [];
-  List<CompanyEntity> companies = [];
+  List<CityModel> cities = [];
+  List<SubCategoryModel> subCategories = [];
+  List<CompanyModel> companies = [];
 
   // Store filter parameters for search
   List<int> selectedSubCategories = [];
   int selectedCityId = 0;
   String selectedType = '';
+  String? currentSearch;
+
+  int currentPage = 1;
+  int lastPage = 1;
+  bool isLoadingMore = false;
 
   void switchToGrid() {
     isListView = !isListView;
@@ -38,7 +37,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
   void toggleFavourite(int companyId) {
     companies = companies.map((company) {
       if (company.id == companyId) {
-        return CompanyEntity(
+        return CompanyModel(
           id: company.id,
           name: company.name,
           image: company.image,
@@ -57,7 +56,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
 
   Future<void> getCities() async {
     emit(GetCitiesLoading());
-    final result = await getCitiesUseCase();
+    final result = await companiesRepository.getCities();
     result.fold((l) => emit(GetCitiesError(l.message)), (r) {
       cities = r;
       emit(GetCitiesSuccess());
@@ -66,7 +65,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
 
   Future<void> getSubCategories() async {
     emit(GetSubCategoriesLoading());
-    final result = await getSubCategoriesUseCase();
+    final result = await companiesRepository.getSubCategories();
     result.fold((l) => emit(GetSubCategoriesError(l.message)), (r) {
       subCategories = r;
       emit(GetSubCategoriesSuccess());
@@ -83,37 +82,65 @@ class CompaniesCubit extends Cubit<CompaniesState> {
     selectedSubCategories = subCategories;
     selectedCityId = cityId;
     selectedType = type;
+    currentSearch = search;
+    currentPage = 1;
 
     emit(FilterCompaniesLoading());
-  
-    final result = await filterCompaniesUseCase(
+
+    final result = await companiesRepository.filterCompanies(
       subCategories: subCategories,
       cityId: cityId,
       type: type,
       search: search,
+      page: currentPage,
     );
-    result.fold((l) => emit(FilterCompaniesError(l.message)), (r) {
-      companies = r;
+    result.fold((l) => emit(FilterCompaniesError(l.message)), (
+      CompaniesResponseModel r,
+    ) {
+      companies = r.companies;
+      lastPage = r.pagination.lastPage;
       emit(FilterCompaniesSuccess());
     });
   }
 
+  Future<void> loadMoreCompanies() async {
+    if (currentPage >= lastPage || isLoadingMore) return;
+
+    isLoadingMore = true;
+    emit(LoadMoreCompaniesLoading());
+
+    currentPage++;
+
+    final result = await companiesRepository.filterCompanies(
+      subCategories: selectedSubCategories,
+      cityId: selectedCityId,
+      type: selectedType,
+      search: currentSearch,
+      page: currentPage,
+    );
+
+    isLoadingMore = false;
+
+    result.fold(
+      (l) {
+        currentPage--; // Revert page increment on error
+        emit(LoadMoreCompaniesError(l.message));
+      },
+      (r) {
+        companies.addAll(r.companies);
+        lastPage = r.pagination.lastPage;
+        emit(FilterCompaniesSuccess());
+      },
+    );
+  }
+
   // search
   Future<void> searchCompanies(String query) async {
-    if (query.isEmpty) {
-      await filterCompanies(
-        subCategories: selectedSubCategories,
-        cityId: selectedCityId,
-        type: selectedType,
-      );
-    } else {
-      // Search with query
-      await filterCompanies(
-        subCategories: selectedSubCategories,
-        cityId: selectedCityId,
-        type: selectedType,
-        search: query,
-      );
-    }
+    await filterCompanies(
+      subCategories: selectedSubCategories,
+      cityId: selectedCityId,
+      type: selectedType,
+      search: query.isEmpty ? null : query,
+    );
   }
 }

@@ -38,3 +38,10 @@ class FilterCompaniesError extends CompaniesState {
   final String message;
   FilterCompaniesError(this.message);
 }
+
+class LoadMoreCompaniesLoading extends CompaniesState {}
+
+class LoadMoreCompaniesError extends CompaniesState {
+  final String message;
+  LoadMoreCompaniesError(this.message);
+}

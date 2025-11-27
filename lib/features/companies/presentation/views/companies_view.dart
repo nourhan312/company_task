@@ -24,14 +24,21 @@ class CompaniesView extends StatelessWidget {
             cityId: 2,
             type: 'person',
           );
-          return Scaffold(
-            appBar: CustomAppBar(
-              title: AppStrings.appbarTitle,
-              onMenuPressed: () {
-                context.read<CompaniesCubit>().switchToGrid();
-              },
+          return GestureDetector(
+            onTap: () {
+              // Dismiss keyboard when tapping outside
+              FocusScope.of(context).unfocus();
+            },
+            child: Scaffold(
+              resizeToAvoidBottomInset: true,
+              appBar: CustomAppBar(
+                title: AppStrings.appbarTitle,
+                onMenuPressed: () {
+                  context.read<CompaniesCubit>().switchToGrid();
+                },
+              ),
+              body: CompaniesBody(),
             ),
-            body: CompaniesBody(),
           );
         },
       ),

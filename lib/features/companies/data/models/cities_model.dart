@@ -1,17 +1,12 @@
-import 'package:company_task/features/companies/domain/Entities/cities_entities.dart';
+class CityModel {
+  final int id;
+  final String name;
 
-class CityModel extends CityEntity {
-  CityModel({required super.id, required super.name});
+  CityModel({required this.id, required this.name});
 
   factory CityModel.fromJson(Map<String, dynamic> json) {
-    return CityModel(
-      id: json['id'],
-      name: json['name'],
-    );
+    return CityModel(id: json['id'], name: json['name']);
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'name': name};
 }

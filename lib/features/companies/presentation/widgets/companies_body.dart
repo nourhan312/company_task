@@ -45,17 +45,15 @@ class CompaniesBody extends StatelessWidget {
                               const CompanyGridSkeletonItem(),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10.w,
-                            mainAxisSpacing: 16.h,
-                            childAspectRatio: 0.8,
-                          ),
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10.w,
+                                mainAxisSpacing: 16.h,
+                                childAspectRatio: 0.8,
+                              ),
                         ),
                 );
               } else if (state is FilterCompaniesError) {
-                return Expanded(
-                  child: Center(child: Text(state.message)),
-                );
+                return Expanded(child: Center(child: Text(state.message)));
               }
 
               if (cubit.companies.isEmpty && state is FilterCompaniesSuccess) {
@@ -63,23 +61,34 @@ class CompaniesBody extends StatelessWidget {
               }
 
               return Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: ScaleTransition(scale: animation, child: child),
-                    );
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    if (notification is ScrollEndNotification &&
+                        notification.metrics.extentAfter == 0) {
+                      cubit.loadMoreCompanies();
+                    }
+                    return false;
                   },
-                  child: isListView
-                      ? CompaniesListView(
-                          key: const ValueKey('list'),
-                          companies: cubit.companies,
-                        )
-                      : CompaniesGridView(
-                          key: const ValueKey('grid'),
-                          companies: cubit.companies,
-                        ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: ScaleTransition(scale: animation, child: child),
+                      );
+                    },
+                    child: isListView
+                        ? CompaniesListView(
+                            key: const ValueKey('list'),
+                            companies: cubit.companies,
+                            isLoadingMore: cubit.isLoadingMore,
+                          )
+                        : CompaniesGridView(
+                            key: const ValueKey('grid'),
+                            companies: cubit.companies,
+                            isLoadingMore: cubit.isLoadingMore,
+                          ),
+                  ),
                 ),
               );
             },
