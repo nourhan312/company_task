@@ -3,6 +3,7 @@ import 'package:company_task/core/extensions/custom_sizedbox.dart';
 import 'package:company_task/features/companies/presentation/widgets/companies_list_view.dart';
 import 'package:company_task/features/companies/presentation/widgets/company_grid_skeleton_item.dart';
 import 'package:company_task/features/companies/presentation/widgets/company_list_skeleton_item.dart';
+import 'package:company_task/features/companies/presentation/widgets/no_search_body.dart';
 import 'package:company_task/features/companies/presentation/widgets/search_part.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,6 @@ class CompaniesBody extends StatelessWidget {
         children: [
           SearchPart(),
           24.h.boxH,
-
           BlocBuilder<CompaniesCubit, CompaniesState>(
             builder: (context, state) {
               final cubit = context.read<CompaniesCubit>();
@@ -45,16 +45,21 @@ class CompaniesBody extends StatelessWidget {
                               const CompanyGridSkeletonItem(),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10.w,
-                                mainAxisSpacing: 16.h,
-
-                                childAspectRatio: 0.8,
-                              ),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10.w,
+                            mainAxisSpacing: 16.h,
+                            childAspectRatio: 0.8,
+                          ),
                         ),
                 );
               } else if (state is FilterCompaniesError) {
-                return Center(child: Text(state.message));
+                return Expanded(
+                  child: Center(child: Text(state.message)),
+                );
+              }
+
+              if (cubit.companies.isEmpty && state is FilterCompaniesSuccess) {
+                return Expanded(child: NoSearchBody());
               }
 
               return Expanded(

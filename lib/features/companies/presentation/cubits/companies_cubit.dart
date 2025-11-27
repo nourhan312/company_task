@@ -25,6 +25,11 @@ class CompaniesCubit extends Cubit<CompaniesState> {
   List<SubCategoryEntity> subCategories = [];
   List<CompanyEntity> companies = [];
 
+  // Store filter parameters for search
+  List<int> selectedSubCategories = [];
+  int selectedCityId = 0;
+  String selectedType = '';
+
   void switchToGrid() {
     isListView = !isListView;
     emit(SwitchViewState(isListView));
@@ -74,7 +79,13 @@ class CompaniesCubit extends Cubit<CompaniesState> {
     required String type,
     String? search,
   }) async {
+    // Store filter parameters for search
+    selectedSubCategories = subCategories;
+    selectedCityId = cityId;
+    selectedType = type;
+
     emit(FilterCompaniesLoading());
+  
     final result = await filterCompaniesUseCase(
       subCategories: subCategories,
       cityId: cityId,
@@ -85,5 +96,24 @@ class CompaniesCubit extends Cubit<CompaniesState> {
       companies = r;
       emit(FilterCompaniesSuccess());
     });
+  }
+
+  // search
+  Future<void> searchCompanies(String query) async {
+    if (query.isEmpty) {
+      await filterCompanies(
+        subCategories: selectedSubCategories,
+        cityId: selectedCityId,
+        type: selectedType,
+      );
+    } else {
+      // Search with query
+      await filterCompanies(
+        subCategories: selectedSubCategories,
+        cityId: selectedCityId,
+        type: selectedType,
+        search: query,
+      );
+    }
   }
 }
