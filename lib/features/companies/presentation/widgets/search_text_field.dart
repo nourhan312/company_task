@@ -23,6 +23,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
     _controller.dispose();
     super.dispose();
   }
+  
 
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
