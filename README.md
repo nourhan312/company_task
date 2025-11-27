@@ -1,6 +1,8 @@
 # Company Task App
 
-A Flutter application designed to manage and view companies with advanced filtering and pagination support.
+- Assessment project for **Link Development**  
+
+- A Flutter application for browsing and filtering companies with full **infinite pagination**, search, view modes, and favorites support — built with a clean, scalable structure.
 
 ## 🚀 Features
 
