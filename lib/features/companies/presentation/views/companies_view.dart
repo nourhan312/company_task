@@ -19,25 +19,23 @@ class CompaniesView extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final cubit = context.read<CompaniesCubit>();
-          cubit.filterCompanies(
-            subCategories: [1, 2, 3],
-            cityId: 2,
-            type: 'person',
-          );
+          cubit.filterCompanies(subCategories: [], cityId: 1, type: '');
           return GestureDetector(
             onTap: () {
-              // Dismiss keyboard when tapping outside
               FocusScope.of(context).unfocus();
             },
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              appBar: CustomAppBar(
-                title: AppStrings.appbarTitle,
-                onMenuPressed: () {
-                  context.read<CompaniesCubit>().switchToGrid();
-                },
+            child: Container(
+              color: Colors.white,
+              child: Scaffold(
+                resizeToAvoidBottomInset: true,
+                appBar: CustomAppBar(
+                  title: AppStrings.appbarTitle,
+                  onMenuPressed: () {
+                    context.read<CompaniesCubit>().switchToGrid();
+                  },
+                ),
+                body: CompaniesBody(),
               ),
-              body: CompaniesBody(),
             ),
           );
         },

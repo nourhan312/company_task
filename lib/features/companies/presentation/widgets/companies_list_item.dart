@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
+import '../../../../core/theme/app_assets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_textstyles.dart';
 
@@ -119,13 +120,13 @@ class CompaniesListItem extends StatelessWidget {
               padding: EdgeInsets.zero,
               icon: company.isFavourite
                   ? SvgPicture.asset(
-                      'assets/icons/heart.svg',
+                      AppAssets.heartIcon,
                       height: 20.h,
                       width: 20.w,
                       color: Colors.red,
                     )
                   : SvgPicture.asset(
-                      'assets/icons/heart.svg',
+                      AppAssets.heartIcon,
                       height: 20.h,
                       width: 20.w,
                     ),

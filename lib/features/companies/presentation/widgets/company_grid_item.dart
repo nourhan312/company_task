@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../core/theme/app_assets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_textstyles.dart';
 
@@ -68,14 +69,14 @@ class CompanyGridItem extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     icon: company.isFavourite
                         ? SvgPicture.asset(
-                            'assets/icons/heart.svg',
+                            AppAssets.heartIcon,
                             height: 18.h,
                             width: 18.w,
                             fit: BoxFit.contain,
                             color: Colors.red,
                           )
                         : SvgPicture.asset(
-                            'assets/icons/heart.svg',
+                            AppAssets.heartIcon,
                             height: 18.h,
                             width: 18.w,
                             fit: BoxFit.contain,

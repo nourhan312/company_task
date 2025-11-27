@@ -1,3 +1,4 @@
+import 'package:company_task/core/theme/app_assets.dart';
 import 'package:company_task/core/theme/app_colors.dart';
 import 'package:company_task/features/companies/presentation/cubits/companies_cubit.dart';
 import 'package:company_task/features/companies/presentation/widgets/search_text_field.dart';
@@ -22,7 +23,7 @@ class SearchPart extends StatelessWidget {
             borderRadius: BorderRadius.circular(24.r),
           ),
           child: IconButton(
-            icon: SvgPicture.asset('assets/icons/filter.svg'),
+            icon: SvgPicture.asset(AppAssets.filterIcon),
             onPressed: () {
               final cubit = context.read<CompaniesCubit>();
               showModalBottomSheet(
