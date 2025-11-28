@@ -122,7 +122,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
 
     result.fold(
       (l) {
-        currentPage--; // Revert page increment on error
+        currentPage--;
         emit(LoadMoreCompaniesError(l.message));
       },
       (r) {

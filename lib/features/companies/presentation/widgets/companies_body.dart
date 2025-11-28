@@ -18,6 +18,7 @@ class CompaniesBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<CompaniesCubit>();
     return Padding(
       padding: context.symmetric(horizontal: 16.w, vertical: 24.h),
       child: Column(
@@ -26,7 +27,6 @@ class CompaniesBody extends StatelessWidget {
           24.h.boxH,
           BlocBuilder<CompaniesCubit, CompaniesState>(
             builder: (context, state) {
-              final cubit = context.read<CompaniesCubit>();
               final isListView = state is SwitchViewState
                   ? state.isList
                   : cubit.isListView;
@@ -61,33 +61,42 @@ class CompaniesBody extends StatelessWidget {
               }
 
               return Expanded(
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (notification) {
-                    if (notification is ScrollEndNotification &&
-                        notification.metrics.extentAfter == 0) {
-                      cubit.loadMoreCompanies();
-                    }
-                    return false;
+                child: RefreshIndicator(
+                  color: Theme.of(context).primaryColor,
+                  onRefresh: () async {
+                    await cubit.filterCompanies();
                   },
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, animation) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: ScaleTransition(scale: animation, child: child),
-                      );
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (notification) {
+                      if (notification is ScrollEndNotification &&
+                          notification.metrics.extentAfter == 0) {
+                        cubit.loadMoreCompanies();
+                      }
+                      return false;
                     },
-                    child: isListView
-                        ? CompaniesListView(
-                            key: const ValueKey('list'),
-                            companies: cubit.companies,
-                            isLoadingMore: cubit.isLoadingMore,
-                          )
-                        : CompaniesGridView(
-                            key: const ValueKey('grid'),
-                            companies: cubit.companies,
-                            isLoadingMore: cubit.isLoadingMore,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: ScaleTransition(
+                            scale: animation,
+                            child: child,
                           ),
+                        );
+                      },
+                      child: isListView
+                          ? CompaniesListView(
+                              key: const ValueKey('list'),
+                              companies: cubit.companies,
+                              isLoadingMore: cubit.isLoadingMore,
+                            )
+                          : CompaniesGridView(
+                              key: const ValueKey('grid'),
+                              companies: cubit.companies,
+                              isLoadingMore: cubit.isLoadingMore,
+                            ),
+                    ),
                   ),
                 ),
               );
