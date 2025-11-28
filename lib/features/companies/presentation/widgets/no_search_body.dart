@@ -4,8 +4,10 @@ import 'package:company_task/core/theme/app_colors.dart';
 import 'package:company_task/core/theme/app_strings.dart';
 import 'package:company_task/core/theme/app_textstyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import '../cubits/companies_cubit.dart';
 
 class NoSearchBody extends StatelessWidget {
   const NoSearchBody({super.key});
@@ -26,21 +28,30 @@ class NoSearchBody extends StatelessWidget {
               fontSize: 14.sp,
             ),
           ),
-          8.h.boxH,
-          Container(
-            width: 150.w,
-            height: 45.h,
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Center(
-              child: Text(
-                AppStrings.searchAgain,
-                style: AppTextStyles.cairo16w400.copyWith(color: Colors.white),
+          GestureDetector(
+            onTap: () {
+              final cubit = context.read<CompaniesCubit>();
+              final lastQuery = cubit.currentSearch ?? '';
+              cubit.searchCompanies(lastQuery);
+            },
+            child: Container(
+              width: 150.w,
+              height: 45.h,
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Center(
+                child: Text(
+                  AppStrings.searchAgain,
+                  style: AppTextStyles.cairo16w400.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
+          8.h.boxH,
         ],
       ),
     );

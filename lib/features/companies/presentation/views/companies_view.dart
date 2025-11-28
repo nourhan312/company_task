@@ -17,15 +17,19 @@ class CompaniesView extends StatelessWidget {
         ..getCities()
         ..getSubCategories()
         ..filterCompanies(),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: CustomAppBar(
-          title: AppStrings.appbarTitle,
-          onMenuPressed: () {
-            context.read<CompaniesCubit>().switchToGrid();
-          },
-        ),
-        body: CompaniesBody(),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            resizeToAvoidBottomInset: true,
+            appBar: CustomAppBar(
+              title: AppStrings.appbarTitle,
+              onMenuPressed: () {
+                context.read<CompaniesCubit>().switchToGrid();
+              },
+            ),
+            body: const CompaniesBody(),
+          );
+        },
       ),
     );
   }

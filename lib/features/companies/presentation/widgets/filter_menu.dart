@@ -35,6 +35,10 @@ class _FilterMenuState extends State<FilterMenu> {
       selectedSubCategories.clear();
       selectedCityId = null;
     });
+
+    final cubit = context.read<CompaniesCubit>();
+    cubit.filterCompanies();
+    Navigator.pop(context);
   }
 
   void _onServiceProviderSelected(String provider, bool isSelected) {
