@@ -20,7 +20,7 @@ class FilterMenu extends StatefulWidget {
 }
 
 class _FilterMenuState extends State<FilterMenu> {
-  String selectedServiceProvider = AppStrings.engineeringOffices;
+  String selectedServiceProvider = '';
   List<int> selectedSubCategories = [];
   int? selectedCityId;
 
@@ -28,6 +28,48 @@ class _FilterMenuState extends State<FilterMenu> {
     AppStrings.engineeringOffices,
     AppStrings.individuals,
   ];
+
+  void _resetFilters() {
+    setState(() {
+      selectedServiceProvider = '';
+      selectedSubCategories.clear();
+      selectedCityId = null;
+    });
+  }
+
+  void _onServiceProviderSelected(String provider, bool isSelected) {
+    setState(() {
+      selectedServiceProvider = isSelected ? provider : '';
+    });
+  }
+
+  void _onSubCategorySelected(int id, bool isSelected) {
+    setState(() {
+      isSelected
+          ? selectedSubCategories.add(id)
+          : selectedSubCategories.remove(id);
+    });
+  }
+
+  void _applyFilters(CompaniesCubit cubit) {
+    final hasSubCategories = selectedSubCategories.isEmpty
+        ? null
+        : selectedSubCategories;
+    final selectedCity = selectedCityId;
+    final type = switch (selectedServiceProvider) {
+      AppStrings.engineeringOffices => 'office',
+      AppStrings.individuals => 'person',
+      _ => '',
+    };
+
+    cubit.filterCompanies(
+      subCategories: hasSubCategories,
+      cityId: selectedCity,
+      type: type.isEmpty ? null : type,
+    );
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +107,7 @@ class _FilterMenuState extends State<FilterMenu> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  setState(() {
-                    selectedServiceProvider = "";
-                    selectedSubCategories = [];
-                    selectedCityId = null;
-                  });
-                },
+                onPressed: _resetFilters,
                 child: Text(
                   AppStrings.clearAll,
                   style: AppTextStyles.cairo16w500.copyWith(
@@ -83,10 +119,7 @@ class _FilterMenuState extends State<FilterMenu> {
             ],
           ),
           24.h.boxH,
-          Text(
-            AppStrings.serviceProvider,
-            style: AppTextStyles.cairo16w500.copyWith(color: AppColors.black),
-          ),
+          _sectionTitle(AppStrings.serviceProvider),
           16.h.boxH,
           Wrap(
             spacing: 8.w,
@@ -95,19 +128,13 @@ class _FilterMenuState extends State<FilterMenu> {
               return CustomFilterChip(
                 label: provider,
                 selected: selectedServiceProvider == provider,
-                onSelected: (selected) {
-                  setState(() {
-                    selectedServiceProvider = selected ? provider : "";
-                  });
-                },
+                onSelected: (selected) =>
+                    _onServiceProviderSelected(provider, selected),
               );
             }).toList(),
           ),
           24.h.boxH,
-          Text(
-            AppStrings.services,
-            style: AppTextStyles.cairo16w500.copyWith(color: AppColors.black),
-          ),
+          _sectionTitle(AppStrings.services),
           16.h.boxH,
           cubit.subCategories.isEmpty
               ? Wrap(
@@ -115,7 +142,7 @@ class _FilterMenuState extends State<FilterMenu> {
                   runSpacing: 8.h,
                   children: List.generate(
                     6,
-                    (index) => const FilterChipSkeletonItem(),
+                    (_) => const FilterChipSkeletonItem(),
                   ),
                 )
               : Wrap(
@@ -125,23 +152,13 @@ class _FilterMenuState extends State<FilterMenu> {
                     return CustomFilterChip(
                       label: subCategory.name,
                       selected: selectedSubCategories.contains(subCategory.id),
-                      onSelected: (selected) {
-                        setState(() {
-                          if (selected) {
-                            selectedSubCategories.add(subCategory.id);
-                          } else {
-                            selectedSubCategories.remove(subCategory.id);
-                          }
-                        });
-                      },
+                      onSelected: (selected) =>
+                          _onSubCategorySelected(subCategory.id, selected),
                     );
                   }).toList(),
                 ),
           24.h.boxH,
-          Text(
-            AppStrings.city,
-            style: AppTextStyles.cairo16w500.copyWith(color: AppColors.black),
-          ),
+          _sectionTitle(AppStrings.city),
           16.h.boxH,
           cubit.cities.isEmpty
               ? Container(
@@ -155,49 +172,16 @@ class _FilterMenuState extends State<FilterMenu> {
                   value: selectedCityId,
                   items: cubit.cities.map((city) => city.id).toList(),
                   hint: AppStrings.citySelection,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedCityId = newValue;
-                    });
-                  },
-                  itemLabelBuilder: (cityId) {
-                    final city = cubit.cities.firstWhere((c) => c.id == cityId);
-                    return city.name;
-                  },
+                  onChanged: (newValue) =>
+                      setState(() => selectedCityId = newValue),
+                  itemLabelBuilder: (cityId) =>
+                      cubit.cities.firstWhere((c) => c.id == cityId).name,
                 ),
           32.h.boxH,
           Padding(
             padding: context.symmetric(horizontal: 16.w),
             child: CustomElevatedButton(
-              onPressed: () {
-                // Validate city selection
-                if (selectedCityId == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('يرجى اختيار المدينة'),
-                      backgroundColor: Colors.red,
-                      behavior: SnackBarBehavior.floating,
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                  return;
-                }
-
-                String type = '';
-                if (selectedServiceProvider == AppStrings.engineeringOffices) {
-                  type = 'office';
-                } else if (selectedServiceProvider == AppStrings.individuals) {
-                  type = 'person';
-                }
-
-                cubit.filterCompanies(
-                  subCategories: selectedSubCategories,
-                  cityId: selectedCityId!,
-                  type: type,
-                );
-
-                Navigator.pop(context);
-              },
+              onPressed: () => _applyFilters(cubit),
               text: AppStrings.apply,
             ),
           ),
@@ -206,4 +190,9 @@ class _FilterMenuState extends State<FilterMenu> {
       ),
     );
   }
+
+  Widget _sectionTitle(String title) => Text(
+    title,
+    style: AppTextStyles.cairo16w500.copyWith(color: AppColors.black),
+  );
 }
