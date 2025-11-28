@@ -45,39 +45,44 @@ class CompaniesRepositoryImpl implements CompaniesRepository {
 
   @override
   Future<Either<Failure, CompaniesResponseModel>> filterCompanies({
-    required List<int> subCategories,
-    required int cityId,
-    required String type,
+    List<int>? subCategories,
+    int? cityId,
+    String? type,
     String? search,
     int page = 1,
   }) async {
     try {
-      final subCategoriesList = subCategories.map((id) => {"id": id}).toList();
-      final subCategoriesString = jsonEncode(subCategoriesList);
+      final Map<String, dynamic> requestData = {};
+
+      if (subCategories != null && subCategories.isNotEmpty) {
+        final subCategoriesList = subCategories
+            .map((id) => {"id": id})
+            .toList();
+        requestData[ApiKeys.subCategories] = jsonEncode(subCategoriesList);
+      } else {
+        requestData[ApiKeys.subCategories] = jsonEncode([]);
+      }
+
+      if (cityId != null && cityId != 0) {
+        requestData[ApiKeys.cityId] = cityId;
+      }
+
+      if (type != null && type.isNotEmpty) {
+        requestData[ApiKeys.type] = type;
+      }
+
+      if (search != null && search.isNotEmpty) {
+        requestData[ApiKeys.search] = search;
+      }
 
       final response = await apiConsumer.post(
         "${EndPoints.filterCompanies}?page=$page",
         isFormData: true,
-        data: {
-          ApiKeys.subCategories: subCategoriesString,
-          ApiKeys.cityId: cityId,
-          ApiKeys.type: type,
-          if (search != null) ApiKeys.search: search,
-        },
+        data: requestData,
       );
 
       final data = response['data'];
       final companiesResponse = CompaniesResponseModel.fromJson(data);
-
-      debugPrint(
-        'Pagination - Current Page: ${companiesResponse.pagination.currentPage}',
-      );
-      debugPrint(
-        'Pagination - Last Page: ${companiesResponse.pagination.lastPage}',
-      );
-      debugPrint('Pagination - Total: ${companiesResponse.pagination.total}');
-      debugPrint('Companies Count: ${companiesResponse.companies.length}');
-
       return Right(companiesResponse);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.errorModel.errorMessage));

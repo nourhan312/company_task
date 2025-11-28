@@ -10,9 +10,9 @@ abstract class CompaniesRepository {
   Future<Either<Failure, List<SubCategoryModel>>> getSubCategories();
 
   Future<Either<Failure, CompaniesResponseModel>> filterCompanies({
-    required List<int> subCategories,
-    required int cityId,
-    required String type,
+    List<int>? subCategories,
+    int? cityId,
+    String? type,
     String? search,
     int page = 1,
   });

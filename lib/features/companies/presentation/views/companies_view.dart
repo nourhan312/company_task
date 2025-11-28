@@ -15,30 +15,17 @@ class CompaniesView extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<CompaniesCubit>()
         ..getCities()
-        ..getSubCategories(),
-      child: Builder(
-        builder: (context) {
-          final cubit = context.read<CompaniesCubit>();
-          cubit.filterCompanies(subCategories: [], cityId: 1, type: '');
-          return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: Container(
-              color: Colors.white,
-              child: Scaffold(
-                resizeToAvoidBottomInset: true,
-                appBar: CustomAppBar(
-                  title: AppStrings.appbarTitle,
-                  onMenuPressed: () {
-                    context.read<CompaniesCubit>().switchToGrid();
-                  },
-                ),
-                body: CompaniesBody(),
-              ),
-            ),
-          );
-        },
+        ..getSubCategories()
+        ..filterCompanies(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: CustomAppBar(
+          title: AppStrings.appbarTitle,
+          onMenuPressed: () {
+            context.read<CompaniesCubit>().switchToGrid();
+          },
+        ),
+        body: CompaniesBody(),
       ),
     );
   }

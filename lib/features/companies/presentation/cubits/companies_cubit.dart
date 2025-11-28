@@ -73,15 +73,14 @@ class CompaniesCubit extends Cubit<CompaniesState> {
   }
 
   Future<void> filterCompanies({
-    required List<int> subCategories,
-    required int cityId,
-    required String type,
+    List<int>? subCategories,
+    int? cityId,
+    String? type,
     String? search,
   }) async {
-    // Store filter parameters for search
-    selectedSubCategories = subCategories;
-    selectedCityId = cityId;
-    selectedType = type;
+    selectedSubCategories = subCategories ?? [];
+    selectedCityId = cityId ?? 0;
+    selectedType = type ?? '';
     currentSearch = search;
     currentPage = 1;
 
